@@ -56,31 +56,46 @@ React Router 是建立在[history](https://github.com/ReactTraining/history)之�
 
 > `history`是一个统一了所有DOM和非DOM环境会话记录的Javascript库。history提供了简洁的API,让你可以管理history堆栈，跳转，跳转前确认，以及保持会话之间的状态。
 
+history是react router所必需的两个依赖之一。
 每个router组件创建了一个history对象，用来记录当前路径( `history.location` )，上一步路径也存储在堆栈中。当前路径改变时，视图会重新渲染，给你一种跳转的感觉。当前路径又是如何改变的呢？history对象有 `history.push()`和 `history.replace()`这些方法来实现。当你点击 `<Link>`组件会触发 `history.push()`，使用 `<Redirect>`则会调用 `history.replace()`。其他方法 - 例如 `history.goBack()`和 `history.goForward()` - 用来根据页面的后退和前进来跳转history堆栈。
 
 那么history内部又是怎么样实现路由监听和响应的呢？
 
 #### History的实现
 
-在认识history之前，我们首先知道浏览器给我们提供的原生路由功能，接下来的很多方法中将出现它们的影子。
+在认识history之前，我们首先知道浏览器给我们提供的原生路由功能，比如[`location`](https://developer.mozilla.org/zh-CN/docs/Web/API/Location)，接下来的很多方法中将出现它们的影子。
 
 `history`提供了三种路由实现的方式。
 1. `browserHistory`，支持HTML5 history API的路由实现（[兼容性](https://caniuse.com/#feat=history)）
 2. `hashHistory`，向下兼容传统浏览器的hash路由实现
 3. `createMemoryHistory`，React实现的定制化路由，不依赖任何环境，可用于非DOM环境，比如`React Native` 或 `SSR`
 
+#### browserHistory
+通过`history.createBrowserHistory`创建
 
-那么我们经常使用的 <BrowserRouter> 和 <HashRouter>是什么呢，相信你已经猜到了，这只是React Router对 browserHistory 和 hashHistory 实现的简单封装。
+原生方法 封装方法
+1. `pushState` ---> `push`
+2. `popState`  ---> `goBack`
+3. `replaceState` ---> `replace`
+
+
+
+
+那么我们经常使用的 <BrowserRouter> 和 <HashRouter>是什么呢，相信你已经猜到了，这只是React Router对 browserHistory 和 hashHistory 实现的组件封装。
+
+
 
 这两个有什么区别呢，我们可以在它们所创建的URL明显看出：
 ```
 // <BrowserRouter>
+不带hash值
 http://example.com/about
 
 // <HashRouter>
-hash值
+带hash值
 http://example.com/#/about
 ```
+
 
 ## 
 
