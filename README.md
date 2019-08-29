@@ -73,10 +73,21 @@ history是react router所必需的两个依赖之一。
 #### browserHistory
 通过`history.createBrowserHistory`创建
 
-原生方法 封装方法
+原生方法 ---> 封装方法
 1. `pushState` ---> `push`
 2. `popState`  ---> `goBack`
 3. `replaceState` ---> `replace`
+
+这些方法都只会操作浏览器的历史记录，而不会引起页面的刷新。`listen`方法是封装的监听的方法，
+
+#### hashHistory
+通过`history.createBrowserHistory`创建
+
+
+
+location: pathname,search,hash,key
+
+
 
 
 
