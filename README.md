@@ -12,11 +12,16 @@
 
 熟悉`React`或者`Webpack`的应该都知道客户端渲染创建的单页应用（SPAs）。一个SPA会包含很多视图，对应`webpack`中配置的entry（也可以称为入口页面），和传统的多页应用不同的是，视图之间的跳转不应该导致整个页面被重新加载，而是应该就在当前页面里渲染。具象化来说是一个`portal`(入口)，里面包含多个页面view。习惯于多页应用的最终用户，期望在一个SPA中应该满足以下功能：
 
-- 每个视图应该有唯一URL来标识。这样用户可以通过书签收藏的URL指向引用的资源。 例如： www.example.com/pageA
+- 记录当前页面的状态（保存或分享当前页的url，再次打开该url时，网页还是保存（分享）时的状态）；
 
 - 浏览器的前进后退功能
 
 - 动态URL的适配。动态生成的URL使用嵌套视图来对应。 - 例如：`example.com/product/shoes/101`，101是动态的产品id。
+
+作为开发者，要实现这几个功能，我们需要做到：
+1. 改变url且不让浏览器向服务器发出请求
+2. 监测url的变化
+3. 截获url地址，并解析出需要的信息来匹配路由规则
 
 **路由定义**是指在初始化React Router时，声明的路由项配置。
 ```
@@ -78,11 +83,34 @@ history是react router所必需的两个依赖之一。
 2. `popState`  ---> `goBack`
 3. `replaceState` ---> `replace`
 
-这些方法都只会操作浏览器的历史记录，而不会引起页面的刷新。`listen`方法是封装的监听的方法，
+```
+window.history.pushState(state, title, url) 
+// state：需要保存的数据，这个数据在触发popstate事件时，可以在event.state里获取
+// title：标题，基本没用，一般传 null
+// url：设定新的历史记录的 url。新的 url 与当前 url 的 origin 必须是一樣的，否则会抛出错误。url可以是绝对路径，也可以是相对路径。
+//如 当前url是 https://www.baidu.com/a/,执行history.pushState(null, null, './qq/')，则变成 https://www.baidu.com/a/qq/，
+//执行history.pushState(null, null, '/qq/')，则变成 https://www.baidu.com/qq/
+
+window.history.replaceState(state, title, url)
+// 与 pushState 基本相同，但她是修改当前历史记录，而 pushState 是创建新的历史记录
+
+window.addEventListener("popstate", function() {
+    // 监听浏览器前进后退事件，pushState 与 replaceState 方法不会触发              
+});
+
+window.history.back() // 后退
+window.history.forward() // 前进
+window.history.go(1) // 前进一步，-2为后退两步，window.history.lengthk可以查看当前历史堆栈中页面的数量
+```
+
+这些方法都只会操作浏览器的历史记录，而不会引起页面的刷新。
 
 #### hashHistory
 通过`history.createBrowserHistory`创建
 
+这里的hash就是指url尾巴后的#号以及后面的字符。也称作锚点，本身是用来做页面定位的，她可以使对应id的元素显示在可视区域内。
+
+由于hash值变化不会导致浏览器向服务器发出请求，而且hash改变会触发`hashChange`事件，浏览器的前进后退也能对其进行控制，所以在html5的`history`出现前，基本都是使用hash来实现前端路由的，这也是hash模式能兼容老版浏览器的原因。
 
 
 location: pathname,search,hash,key
@@ -124,6 +152,8 @@ http://example.com/#/about
 [React History](https://github.com/ReactTraining/history)
 
 [React Router v4 完全指北](https://cloud.tencent.com/developer/article/1407614)
+
+[前端路由的两种模式](https://www.cnblogs.com/JRliu/p/9025290.html)
 
 
 
