@@ -105,7 +105,7 @@ window.history.go(1) // 前进一步，-2为后退两步，window.history.length
 > 重要!! `history` 模式改变 url 的方式会导致浏览器向服务器发送请求，这不是我们想看到的，我们需要在服务器端做处理：如果匹配不到任何静态资源，则应该始终返回同一个 html 页面。
 
 #### hashHistory
-通过`history.createBrowserHistory`创建
+通过`history.createHashHistory`创建
 
 这里的hash就是指url尾巴后的#号以及后面的字符。也称作锚点，本身是用来做页面定位的，她可以使对应id的元素显示在可视区域内。
 
@@ -120,10 +120,21 @@ location: pathname,search,hash,key
 
 其实之前react-router-dom还提供了一个IndexRoute组件，现在已经被废弃了，我们现在使用`Switch`来替代它。
 
+翻看`createBrowserHistory.js`，可以看到`history`内部是怎么实现监听浏览器路由变化的。
+
+**[window.popstate](https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event)**
+
+> The popstate event of the `Window` interface is fired when the active history entry changes。
+
+源码中显示，通过`window.addEventListener('popstate',cb)`注册的回调，需要注意的是，调用`history.pushState`或`history.replaceState`时不会触发`popstate`事件，只有在做出浏览器动作时，才会触发该事件，如用户点击浏览器的回退按钮（或者在JS中调用history.back()).
+
+**[window.hashchange](https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event)**
+
+> The `hashchange` event is fired when the fragment identifier of the URL has changed
+
+`window.addEventListener('hashchange',cb)`注册的回调，需要注意的是浏览器原生只会监听#符号后的变化，而我们在react或者类react项目中使用的`#/`，都是框架层做的封装。
 
 
-
-## 
 
 ## Tips
 
