@@ -141,6 +141,13 @@ location: pathname,search,hash,key
 RR初始化Router时，调用H的`listen`方法，开始监听路由变化，回调为CB。
 更改浏览器URL(或者hash) --> 回调CB,开始调用注册在`transitionManager`上的listeners --> RR中的props.location变化 --> 利用`path-to-regexp`匹配到`Component`或者`children node` --> `React.render(node)` --> 完成页面渲染。
 
+如你在本文中所看到的，React Router是一个帮助React构建更完美，更声明式的路由库。不像React Router之前的版本，在V4中，一切都是组件。而且，新的设计模式也更完美的使用React的构建方式来实践。比如我们提到的ReactContext.Provider,ReactContext.Consumer。
+
+这次教程，我们由浅入深，学到了：
+- 路由的基础功能，设计思路和React Router的基础组件
+- History的实践和原理
+- 浏览器原生支持的监听路由事件的方法
+
 ## Tips
 
 #### 我经常在链接上看到`?_k=ckuvup`这样的标识符有用吗？
