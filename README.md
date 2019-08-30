@@ -155,6 +155,9 @@ RR初始化Router时，调用H的`listen`方法，开始监听路由变化，回
 
 在DOM API中，这些hash history通过`window.location.hash = newHash `，很简单的利用hash来实现跳转。但是这种行为是不具备回溯性的，我们想要全部的history都能够使用location state,这就要求我们为每一个location创建一个唯一的key，并把它们的状态存储在 **session storage** 中。当访客点击"前进"和"后退"时，我们就可以使用key:value的机制找到这个location 去恢复它的state。
 
+### 待完善
+- React Router组件的完善解析（有必要吗？直接看官网API不是更好？）
+- `createMemoryHistory`在SSR端的应用解析
 
 #### 参考资料
 [React-router wiki](http://react-guide.github.io/react-router-cn/docs/guides/basics/Histories.html)
