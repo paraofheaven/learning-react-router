@@ -134,7 +134,12 @@ location: pathname,search,hash,key
 
 `window.addEventListener('hashchange',cb)`注册的回调，需要注意的是浏览器原生只会监听#符号后的变化，而我们在react或者类react项目中使用的`#/`，都是框架层做的封装。
 
+## 总结：
 
+现在我们捋一下`react-router`(下称RR)和history(下称H)的流程：
+
+RR初始化Router时，调用H的`listen`方法，开始监听路由变化，回调为CB。
+更改浏览器URL(或者hash) --> 回调CB,开始调用注册在`transitionManager`上的listeners --> RR中的props.location变化 --> 利用`path-to-regexp`匹配到`Component`或者`children node` --> `React.render(node)` --> 完成页面渲染。
 
 ## Tips
 
