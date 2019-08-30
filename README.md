@@ -102,8 +102,7 @@ window.history.back() // 后退
 window.history.forward() // 前进
 window.history.go(1) // 前进一步，-2为后退两步，window.history.lengthk可以查看当前历史堆栈中页面的数量
 ```
-
-这些方法都只会操作浏览器的历史记录，而不会引起页面的刷新。
+> 重要!! `history` 模式改变 url 的方式会导致浏览器向服务器发送请求，这不是我们想看到的，我们需要在服务器端做处理：如果匹配不到任何静态资源，则应该始终返回同一个 html 页面。
 
 #### hashHistory
 通过`history.createBrowserHistory`创建
@@ -116,24 +115,12 @@ window.history.go(1) // 前进一步，-2为后退两步，window.history.length
 location: pathname,search,hash,key
 
 
-
-
-
-
 那么我们经常使用的 <BrowserRouter> 和 <HashRouter>是什么呢，相信你已经猜到了，这只是React Router对 browserHistory 和 hashHistory 实现的组件封装。
 
 
+其实之前react-router-dom还提供了一个IndexRoute组件，现在已经被废弃了，我们现在使用`Switch`来替代它。
 
-这两个有什么区别呢，我们可以在它们所创建的URL明显看出：
-```
-// <BrowserRouter>
-不带hash值
-http://example.com/about
 
-// <HashRouter>
-带hash值
-http://example.com/#/about
-```
 
 
 ## 
