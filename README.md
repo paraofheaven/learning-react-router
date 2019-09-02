@@ -66,6 +66,87 @@ React Router 是建立在[history](https://github.com/ReactTraining/history)之�
 
 - **children** `children`和`render`类似，也接受一个函数返回一个React元素，不同的是，不管路径是否匹配，children都会渲染。
 
+#### Path and match
+
+**path**用来标识路由匹配的URL部分。React Router使用了Path-to-RegExp库将路径字符串转为正则表达式，然后和当前路径进行匹配。
+
+当路由路径和当前路径成功匹配，会生成一个对象，我们叫它**match**。match对象有更多关于URL和Path的信息。这些信息可以通过它的属性获取，如下所示：
+
+- `match.url` 返回URL匹配部分的字符串。对于创建嵌套的`<Link>`很有用。
+- `match.path` 返回路由路径字符串
+- `match.isExact` 使用===来准确匹配
+- `match.params` 返回一个对象包含Path-to-RegExp包从URL解析的键值对。
+
+现在我们完全了解了`<Route>`，开始创建一个嵌套路由吧。
+
+#### 为什么需要Switch组件？
+我们先来看一段代码：
+```
+<Route exact path="/" component={Home}/>
+<Route path="/products" component={Products}/>
+<Route path="/category" component={Category}/>
+<Route path="/:id" render = {()=> (<p> I want this text to show up for all routes other than '/', '/products' and '/category' </p>)}/>
+```
+如果当前URL为`/products`，那么所有匹配`/products`路径的route都会被渲染。所以，最后一个路由，`path = /:id`的route最终会被render，设计就是如此，但这可能不是我们想要的结果，我们希望只有第一个被匹配到的路径才会被渲染，这就需要`<Switch>`组件了。
+
+#### 嵌套路由
+
+我们给`/category`和`/products`创建了路由。但如果我们想要`/category/shoes`这种形式的URL呢？
+
+**src/App.js**
+
+```
+import React, { Component } from 'react';
+import { Link, Route, Switch } from 'react-router-dom';
+import Category from './Category';
+
+class App extends Component {
+  render() {
+
+    return (
+      <div>
+        <nav className="navbar navbar-light">
+          <ul className="nav navbar-nav">
+            <li><Link to="/">Homes</Link></li>
+            <li><Link to="/category">Category</Link></li>
+            <li><Link to="/products">Products</Link></li>
+          </ul>
+       </nav>
+
+    <Switch>
+      <Route exact path="/" component={Home}/>
+      <Route path="/category" component={Category}/>
+       <Route path="/products" component={Products}/>
+    </Switch>
+
+    </div>
+    );
+  }
+}
+export default App;
+```
+不像React Router之前的版本，在版本4中，嵌套的 <Route>最好放在父元素里面。所以，Category组件就是这里的父组件，我们将在父组件中定义 `category/:name` 路由。
+
+**src/Category.jsx**
+```
+import React from 'react';
+import { Link, Route } from 'react-router-dom';
+
+const Category = ({ match }) => {
+return( <div> <ul>
+    <li><Link to={`${match.url}/shoes`}>Shoes</Link></li>
+    <li><Link to={`${match.url}/boots`}>Boots</Link></li>
+    <li><Link to={`${match.url}/footwear`}>Footwear</Link></li>
+
+  </ul>
+  <Route path={`${match.path}/:name`} render= {({match}) =>( <div> <h3> {match.params.name} </h3></div>)}/>
+  </div>)
+}
+export default Category;
+```
+
+首先，我们给嵌套路由定义了一些Link。之前提到过， `match.url`用来构建嵌套链接， `match.path`用来构建嵌套路由。如果你对match有不理解的概念， `console.log(match)`会提供一些有用的信息来帮助你了解它。
+
 
 通过阅读源码，我们知道了所有的路由操作都是通过操作`history`来进行的，接下来正式介绍下`history`。
 
