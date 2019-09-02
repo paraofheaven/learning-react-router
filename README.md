@@ -43,7 +43,7 @@ React Router库包含三个包： `react-router`, `react-router-dom`, 和 `react
 
 React Router 是建立在[history](https://github.com/ReactTraining/history)之上的。简而言之，一个 `history` 知道如何去监听浏览器地址栏的变化， 并解析这个 URL 转化为 location 对象， 然后 router 使用它匹配到路由，最后正确地渲染对应的组件。
 
-## React Route 基础
+## 基础路由
 下面是普遍的路由的例子：
 ```
 <Router>
@@ -54,6 +54,18 @@ React Router 是建立在[history](https://github.com/ReactTraining/history)之�
 </Router>
 ```
 上面的例子中，我们使用了`<Router>`组件和一些`<Route>`组件来创建一个基本的路由结构。
+
+## 嵌套路由
+创建嵌套路由之前，我们需要更深入的理解`<Route>如何运行`。开始吧。
+
+`<Route>`有三个可以用来定义要渲染内容的props：
+
+- **component**.在上面我们已经看到，当URL匹配时，router会将传递的组件使用`React.createElement`来生成一个React元素。
+
+- **render** 适合行内渲染。路径匹配时，`render`接受一个函数返回一个元素。
+
+- **children** `children`和`render`类似，也接受一个函数返回一个React元素，不同的是，不管路径是否匹配，children都会渲染。
+
 
 通过阅读源码，我们知道了所有的路由操作都是通过操作`history`来进行的，接下来正式介绍下`history`。
 
@@ -156,7 +168,7 @@ RR初始化Router时，调用H的`listen`方法，开始监听路由变化，回
 在DOM API中，这些hash history通过`window.location.hash = newHash `，很简单的利用hash来实现跳转。但是这种行为是不具备回溯性的，我们想要全部的history都能够使用location state,这就要求我们为每一个location创建一个唯一的key，并把它们的状态存储在 **session storage** 中。当访客点击"前进"和"后退"时，我们就可以使用key:value的机制找到这个location 去恢复它的state。
 
 ### 待完善
-- React Router组件的完善解析（有必要吗？直接看官网API不是更好？）
+- React Router组件的完善解析
 - `createMemoryHistory`在SSR端的应用解析
 
 #### 参考资料
